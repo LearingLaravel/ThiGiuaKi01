@@ -1,3 +1,7 @@
+Cách tạo dự án laravel10: composer create-project --prefer-dist laravel/laravel tên_dự_án "v10.*"
+- php artisan generate:key
+- Chạy composer install
+
 1. Xây dựng CSDL
 1.1. Tạo Migration cho Bảng Phân Loại (Categories):
 php artisan make:migration create_categories_table
