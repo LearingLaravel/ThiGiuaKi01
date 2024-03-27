@@ -20,88 +20,125 @@
 
           <div class="card">
             <div class="card-header">
-              <h4>Add Product</h4>
+              <h4>Cập nhật sản phẩm</h4>
             </div>
             <div class="card-body">
-              <form action="{{ url('products/create') }}" method="POST" enctype="multipart/form-data">
+              <form class="row g-3"  action="{{ url('products/'.$product->id.'/edit') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
+                @method('PUT')
+                <div class="form-group col-md-4">
                   <label for="name">Name</label>
-                  <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}">
+                  <input type="text" name="name" id="name" class="form-control"  value="{{$product->name}}" >
                   @error('name')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
                 </div>
                
 
-                <div class="form-group">
-                  <label for="old_price">Old_price</label>
-                  <input rows="5" name="old_price" id="old_price" class="form-control" value="{{old('old_price')}}"></input>
+                <div class="form-group col-md-4">
+                  <label for="old_price">Old Price</label>
+                  <input rows="5" name="old_price" id="old_price" class="form-control"  value="{{$product->old_price}}" ></input>
                   @error('old_price')
                     <span class="text-danger">{{$message}}</span>
                   @enderror
                 </div>
-                <div class="form-group">
-                    <label for="new_price">new_price</label>
-                    <input rows="5" name="new_price" id="new_price" class="form-control" value="{{old('new_price')}}"></input>
+                <div class="form-group col-md-4">
+                    <label for="new_price">New Price</label>
+                    <input  name="new_price" id="new_price" class="form-control" value="{{$product->new_price}}"></input>
                     @error('new_price')
                       <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
-                <div class="form-group">
+                <div class="form-group col-md-6">
                     <label for="description">Description</label>
-                    <input rows="5" name="description" id="description" class="form-control" value="{{old('description')}}"></input>
+                    <input rows="2" name="description" id="description" class="form-control" value="{{$product->description}}" ></input>
                     @error('description')
                       <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="detail_description">Detail_description</label>
-                    <textarea rows="3" name="detail_description" id="detail_description" class="form-control">{{old('detail_description')}}</textarea>
+                    <textarea rows="5" name="detail_description" id="detail_description" class="form-control">{{$product->detail_description}}</textarea>
                     @error('detail_description')
                       <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="origin">Origin</label>
-                    <textarea rows="2" name="origin" id="origin" class="form-control">{{old('origin')}}</textarea>
+                    <textarea rows="2" name="origin" id="origin" class="form-control">{{$product->origin}}</textarea>
                     @error('origin')
                       <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="standard">Standard</label>
-                    <textarea rows="2" name="standard" id="standard" class="form-control">{{old('standard')}}</textarea>
+                    <textarea rows="2" name="standard" id="standard" class="form-control">{{$product->standard}}</textarea>
                     @error('standard')
                       <span class="text-danger">{{$message}}</span>
                     @enderror
                   </div>
 
-                
-
-
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="image">Image</label>
-                    <input type="file" onchange="loadFile(this)" name="image" id="image" class="form-control">
-                    <img id="image_product" width="200px" height="200px" style="display:none">
+                    <input type="file" onchange="previewImage(event)" name="image" id="image" class="form-control">
+                    @if ($product->image)
+                        <img src="{{ asset('images/' . $product->image) }}" value="{{ $product->image }}" id="image_product" width="200px" height="200px">
+                    @else
+                        <img src="" id="image_product" width="200px" height="200px" style="display: none">
+                    @endif
                     @error('image')
-                        <span class="text-danger">{{$message}}</span>
+                        <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group">
+                
+                <script>
+                function previewImage(event) {
+                    var input = event.target;
+                    var reader = new FileReader();
+                
+                    reader.onload = function() {
+                        var imgElement = document.getElementById("image_product");
+                        imgElement.src = reader.result;
+                        imgElement.style.display = "block"; // Hiển thị ảnh sau khi tải lên
+                    };
+                
+                    reader.readAsDataURL(input.files[0]);
+                }
+                </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="form-group col-md-6">
                     <label for="category_id">Chọn danh mục</label>
                     <select name="category_id" class="form-control">
                         <option value="">Chọn danh mục</option>
                         @foreach($categories as $id => $category_name)
-                            <option value="{{ $id }}">{{ $category_name }}</option>
+                        <option value="{{ $id }}" {{ (old('category_id', $product->category_id) == $id) ? 'selected' : '' }}>
+                          {{ $category_name }}
+                      </option>
                         @endforeach
                     </select>
                 </div>
 
-               
-             
-               
-              
                 <div class="mb-3">
                   <button type="submit" class="btn btn-primary">Submit</button>
                   <a href="{{url('/')}}" class="btn btn-primary float-end">Back</a>
@@ -118,16 +155,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
-  <script>
-   
-                var loadFile = function(output) {
-                  var output = document.getElementById('image_product');
-                  output.src = URL.createObjectURL(event.target.files[0]);
-                  output.style.display = 'block';
-                  output.onload = function() {
-                    URL.revokeObjectURL(output.src) // free memory
-                  }
-                };
-    
-</script>
+ 
 </html>

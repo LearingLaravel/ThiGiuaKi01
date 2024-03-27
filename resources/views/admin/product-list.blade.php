@@ -8,10 +8,19 @@
   </head>
   <body>
   <div class="container">
-    <div class="container">
-        <h2 class="text-center mt-4">List of Cars</h2>
-        <a href="{{url('products/create')}}" class="btn btn-primary">Add Product</a>
-        <table class="table mt-4">
+    <div class=" table-responsive container">
+        <h2 class="text-center mt-4">Danh sách sản phẩm</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url('products/create') }}" class="btn btn-primary">Thêm sản phẩm</a>
+          
+            <form class="form-inline" method="get" action="{{ url('/search') }}">
+              <input name='search' value="{{isset($search) ? $search : ''}}" class="form-control mr-2" type="search" placeholder="Tìm kiếm" aria-label="Tìm kiếm">
+              <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+            </form>
+
+          </div>
+
+        <table class="table mt-4 ">
             <tr>
                 <th>ID</th>
                 <th>Image</th>
@@ -37,15 +46,12 @@
                         <td>{{ $product->detail_description }}</td>
                         <td>{{ $product->origin }}</td>
                         <td>{{ $product->standard }}</td>  
-                        <td>{{ $product->category->category_name }}</td>
-                                                       
+                        <td>{{ $product->category->category_name }}</td>            
                         <td>
-                            <div class="btn-group" role="group" aria-label="Car Actions">
-                            <a href="product/{{$product->id}}" class="btn btn-primary"> Detail</a>
-                            <a href="{{url('products/'.$product->id.'/edit')}}" class="btn btn-warning">Edit</a>
-                            <a href="{{url('products/'.$product->id.'/delete')}}" onclick="return confirm ('Are you sure?')" class="btn btn-danger">Delete</a>
+                            <div aria-label="Car Actions">
+                            <a href="{{url('products/'.$product->id.'/edit')}}" class="btn btn-warning">Sửa</a>
+                            <a href="{{url('products/'.$product->id.'/delete')}}" onclick="return confirm ('Are you sure?')" class="btn btn-danger">Xóa</a>
                             </div>
-                            
                         </td>
                     </tr>
                 @endforeach
